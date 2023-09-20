@@ -1,3 +1,64 @@
-Các phép biến đổi trong Spark: map filter distrinct ..... => In ra RDD mới không
-có các giá trị bằng nhau => In ra RDD mới có các giá trị gấp 3 lần giá trị bạn
-đầu
+.option('header', 'true'): Tùy chọn này cho biết rằng tệp CSV chứa hàng đầu tiên là hàng chứa tên cột. 
+Điều này giúp Spark hiểu rằng hàng đầu tiên không nên được coi là dữ liệu, mà là tiêu đề của các cột.
+
+.option('escape', '\"'): Tùy chọn này xác định ký tự thoát (escape character) được sử dụng trong tệp CSV để đánh dấu các ký tự 
+đặc biệt hoặc ký tự ngắt dòng. Trong trường hợp này, nó là dấu nháy kép (").
+
+.load('data/vdv_olympics.csv', header=True, inferSchema=True): Đây là hàm thực sự để đọc dữ liệu từ tệp CSV. 
+Đối số 'data/vdv_olympics.csv' là đường dẫn đến tệp CSV bạn muốn đọc. '
+header' đã được thiết lập thành True để xác định rằng có tiêu đề cột trong tệp. '
+inferSchema' cũng đã được thiết lập thành True, cho phép Spark tự động suy luận kiểu dữ liệu cho các cột trong tệp CSV.
+
+Khi bạn sử dụng .option('escape', '\"'), Spark sẽ biết rằng dấu nháy kép (") trong tệp CSV không nên được xem xét là 
+phần của giá trị của cột, mà là một ký tự thoát. Điều này giúp đọc đúng các giá trị chứa dấu nháy kép mà không bị hiểu nhầm.
+
+
+https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql.html#module-pyspark.sql.functions
+desc: Đây là hàm để sắp xếp giảm dần một cột.
+asc: Đây là hàm để sắp xếp tăng dần một cột.
+year: Hàm này trích xuất năm từ một trường ngày tháng.
+sum: Tính tổng giá trị của một cột.
+lit: Tạo một cột mới với giá trị cố định.
+when: Hàm để thực hiện điều kiện if-else.
+min: Tìm giá trị nhỏ nhất trong một cột.
+avg: Tính giá trị trung bình của một cột.
+max: Tìm giá trị lớn nhất trong một cột.
+col: Sử dụng để tham chiếu đến một cột trong DataFrame.
+split: Phân tách một trường dữ liệu thành một mảng dựa trên một dấu phân tách.
+explode: Chuyển một cột mảng thành nhiều dòng, mỗi dòng chứa một phần tử trong mảng.
+count: Đếm số lượng dòng trong DataFrame hoặc số lượng giá trị không NULL trong một cột.
+lower: Chuyển đổi chuỗi thành chữ thường.
+upper: Chuyển đổi chuỗi thành chữ hoa.
+concat: Kết hợp nhiều cột thành một cột mới.
+concat_ws: Kết hợp các giá trị trong một mảng thành một chuỗi bằng một ký tự ngăn cách.
+substring: Trích xuất một phần của chuỗi từ vị trí bắt đầu đến vị trí kết thúc.
+coalesce: Chọn giá trị đầu tiên không phải NULL từ các cột được chỉ định.
+isNull: Kiểm tra xem giá trị trong cột có phải là NULL hay không.
+isNotNull: Kiểm tra xem giá trị trong cột có phải không phải NULL hay không.
+date_format: Định dạng lại một trường ngày tháng.
+datediff: Tính số ngày chênh lệch giữa hai trường ngày tháng.
+when (có nhiều điều kiện): Hàm when có thể được sử dụng với nhiều điều kiện để thực hiện các thao tác if-else phức tạp.
+isNull và isNotNull (có nhiều cột): Bạn có thể sử dụng các hàm này với nhiều cột cùng lúc để kiểm tra các giá trị NULL.
+array: Tạo một cột mảng từ các giá trị.
+struct: Tạo một cột struct từ các cột.
+initcap: Chuyển đổi chuỗi thành dạng chữ viết hoa chữ cái đầu tiên.
+regexp_replace: Thay thế các chuỗi theo biểu thức chính quy.
+first: Lấy giá trị đầu tiên trong một cột.
+last: Lấy giá trị cuối cùng trong một cột.
+round: Làm tròn giá trị số về số lượng chữ số thập phân chỉ định.
+floor: Làm tròn giá trị số xuống số nguyên gần nhất.
+ceil: Làm tròn giá trị số lên số nguyên gần nhất.
+trim: Loại bỏ khoảng trắng ở đầu và cuối của chuỗi.
+rtrim: Loại bỏ khoảng trắng ở cuối của chuỗi.
+ltrim: Loại bỏ khoảng trắng ở đầu của chuỗi.
+initcap: Chuyển đổi chuỗi thành dạng in hoa chữ cái đầu tiên của mỗi từ.
+regexp_extract: Trích xuất các phần từ trong chuỗi sử dụng biểu thức chính quy.
+instr: Tìm vị trí xuất hiện đầu tiên của một chuỗi trong chuỗi khác.
+length: Đếm số lượng ký tự trong chuỗi.
+substring_index: Trích xuất một phần chuỗi từ đầu hoặc từ cuối của chuỗi.
+split_part: Trích xuất một phần của chuỗi dựa trên dấu phân tách.
+size: Đếm số lượng phần tử trong mảng.
+map_keys và map_values: Lấy danh sách các khóa hoặc giá trị từ một cột kiểu Map.
+isnan và isinf: Kiểm tra xem giá trị trong cột có phải là NaN (không phải số) hoặc Infinity (vô cùng) hay không.
+array_contains: Kiểm tra xem một giá trị có tồn tại trong mảng hay không.
+current_date và current_timestamp: Tạo cột kiểu Date hoặc Timestamp với thời gian hiện tại.

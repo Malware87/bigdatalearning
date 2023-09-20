@@ -1,29 +1,27 @@
-import os
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, when, sum
+from pyspark.sql.window import Window
+import pyspark.sql.functions as F
 
-# Đường dẫn đến thư mục "input"
-folder_path = "input"
+# Khởi tạo SparkSession
+spark = SparkSession.builder.appName("PremierLeagueRanking").getOrCreate()
 
-# Kiểm tra xem thư mục có tồn tại không
-if os.path.exists(folder_path):
-    # Lấy danh sách tệp tin trong thư mục
-    file_list = os.listdir(folder_path)
+# Đọc dữ liệu từ tệp CSV
+data = spark.read.csv("Premium_2015.csv",
+                      header=True, inferSchema=True)
 
-    # Kiểm tra xem thư mục có rỗng hay không
-    if len(file_list) == 0:
-        print("Thư mục rỗng")
-    else:
-        for file_name in file_list:
-            # Tạo đường dẫn đến tệp tin
-            file_path = os.path.join(folder_path, file_name)
+# Xác định thứ hạng của mỗi đội bóng dựa trên điểm số
+ranked_data = data.groupBy("HomeTeam").agg(
+    sum(when(col("FTR") == "H", 3).when(col("FTR")
+        == "D", 1).otherwise(0)).alias("HomePoints")
+).orderBy(col("HomePoints").desc())
 
-            # Kiểm tra xem file_path là thư mục hay là tệp tin
-            if os.path.isfile(file_path):
-                print("Nội dung của", file_name, "là:")
+# Sử dụng cửa sổ (window) để xếp hạng theo thứ tự
+window_spec = Window.orderBy(col("HomePoints").desc())
+ranked_data = ranked_data.withColumn("Rank", F.rank().over(window_spec))
 
-                # Đọc và in nội dung của tệp tin
-                with open(file_path, 'r') as file:
-                    content = file.read()
-                    print(content)
-                print("\n")
-else:
-    print("Thư mục không tồn tại")
+# Lọc ra 3 đội bóng có thứ hạng cao nhất
+top_3_teams = ranked_data.filter(col("Rank") <= 3)
+
+# Hiển thị kết quả
+top_3_teams.show()

@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Đọc dữ liệu từ tệp CSV
-df_qg = pd.read_csv('vdv_olympics.csv')
-df_qg_noc = pd.read_csv('qg_noc.csv')
+df_qg = pd.read_csv('data/vdv_olympics.csv')
+df_qg_noc = pd.read_csv('data/qg_noc.csv')
 
 # Câu 6: Số lượng vận động viên nam tại mỗi kỳ thế vận hội trong thế kỷ 21.
 male_athletes_21st_century = df_qg_noc[(df_qg_noc['Sex'] == 'M') & (
